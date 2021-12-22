@@ -32,6 +32,7 @@ module.exports = {
     'require-default-props': 'off',
     'no-underscore-dangle': 'off',
     'react/jsx-no-bind': 'off',
+    'no-param-reassign': 'off',
     'import-helpers/order-imports': [
       'warn',
       {

@@ -12,6 +12,8 @@ module.exports = (api) => {
           alias: {
             '@': './src',
             '@core': './src/core',
+            '@components': './src/components',
+            '@styles': './src/styles',
           },
         },
       ],
