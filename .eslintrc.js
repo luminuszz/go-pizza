@@ -13,7 +13,12 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'eslint-plugin-import-helpers'],
+  plugins: [
+    'react',
+    '@typescript-eslint',
+    'eslint-plugin-import-helpers',
+    'react-hooks',
+  ],
   rules: {
     'no-use-before-define': 'off',
     'react/jsx-filename-extension': 'off',
@@ -32,13 +37,15 @@ module.exports = {
     'require-default-props': 'off',
     'no-underscore-dangle': 'off',
     'react/jsx-no-bind': 'off',
+    'react/style-prop-object': 'off',
+    'react/require-default-props': 'off',
     'no-param-reassign': 'off',
     'import-helpers/order-imports': [
       'warn',
       {
         newlinesBetween: 'always',
         groups: [
-          '/^react$/',
+          '/^react/',
           'module',
           '/^@core/',
           [('index', 'parent', 'sibling')],
@@ -46,5 +53,7 @@ module.exports = {
         alphabetize: { order: 'asc', ignoreCase: true },
       },
     ],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 };

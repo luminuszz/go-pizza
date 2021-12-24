@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
+import { getCurrentTheme, toggleTheme } from '@features/theme.slice';
 import themes from '@styles/themes';
 
-import { getCurrentTheme, toggleTheme } from '@core/features/theme.slice';
-import { useAppDispatch, useAppSelector } from '@core/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@core/hooks/useRedux';
 
 type UseThemeType = {
   theme: typeof themes.default;

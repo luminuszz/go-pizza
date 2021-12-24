@@ -8,12 +8,15 @@ module.exports = (api) => {
         require.resolve('babel-plugin-module-resolver'),
         {
           root: ['.'],
-          extensions: ['.ts', '.tsx', '.js', '.ios.js', '.android.js'],
+          extensions: ['.ts', '.tsx', '.js', '.ios.js', '.android.js', '.json'],
           alias: {
             '@': './src',
             '@core': './src/core',
             '@components': './src/components',
             '@styles': './src/styles',
+            '@screens': './src/screens',
+            '@assets': './src/assets',
+            '@features': './src/features',
           },
         },
       ],
