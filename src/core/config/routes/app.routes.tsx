@@ -1,16 +1,22 @@
 import React from 'react';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationOptions,
+} from '@react-navigation/native-stack';
 import { Home } from '@screens/Home';
 
-const Stack = createNativeStackNavigator();
+import { AppRouteStackParamsList } from '@core/config/routes/types.routes';
+
+const Stack = createNativeStackNavigator<AppRouteStackParamsList>();
+
+const options: NativeStackNavigationOptions = {
+  headerShown: false,
+};
 
 export function AppRoutes() {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{ headerShown: false }}
-    >
+    <Stack.Navigator initialRouteName="Home" screenOptions={options}>
       <Stack.Screen name="Home" component={Home} />
     </Stack.Navigator>
   );

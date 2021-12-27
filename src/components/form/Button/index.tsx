@@ -6,11 +6,11 @@ import {
 
 import { Load, Type, Container, Title } from './styles';
 
-interface Props extends RectButtonProps {
+type Props = RectButtonProps & {
   type?: Type;
   text: string;
   isLoading?: boolean;
-}
+};
 
 export function Button({ type = 'primary', text, isLoading, ...props }: Props) {
   return (

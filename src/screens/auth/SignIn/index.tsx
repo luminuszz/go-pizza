@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import brandImg from '@assets/brand.png';
 import { Button } from '@components/form/Button';
 import { Input } from '@components/form/Input';
-import { useNavigation } from '@react-navigation/native';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
+import { NavigatorPublicScreenProps } from '@core/config/routes/types.routes';
 import { useAuth } from '@core/hooks/useAuth';
 
 import {
@@ -18,24 +20,31 @@ import {
   ForgotPasswordButtonLabel,
 } from './styles';
 
-export function LoginScreen() {
-  const navigator = useNavigation();
-  const { loginWithEmailAndPassword, isLoading, isAuthenticated } = useAuth();
-  const [form, setForm] = useState({ email: '', password: '' });
+type FormPayload = {
+  email: string;
+  password: string;
+};
 
-  function handleLogin() {
-    const { email, password } = form;
+type Props = NavigatorPublicScreenProps<'Login'> & {};
+
+const formSchema: yup.SchemaOf<FormPayload> = yup.object().shape({
+  email: yup.string().defined().email(),
+  password: yup.string().defined().min(2),
+});
+
+function LoginScreen(props: Props) {
+  const { loginWithEmailAndPassword, isLoading } = useAuth();
+  const { control, handleSubmit } = useForm<FormPayload>({
+    resolver: yupResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  function handleLogin({ email, password }: FormPayload) {
     loginWithEmailAndPassword(email, password);
   }
-
-  const handleChange = (vl: string, name: string) =>
-    setForm((old) => ({ ...old, [name]: vl }));
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigator.navigate('Home' as any);
-    }
-  }, [isAuthenticated, navigator]);
 
   return (
     <Container>
@@ -47,7 +56,8 @@ export function LoginScreen() {
 
           <Title>Login</Title>
           <Input
-            onChangeText={(vl) => handleChange(vl, 'email')}
+            name="email"
+            control={control}
             placeholder="E-mail"
             type="secondary"
             autoCorrect={false}
@@ -55,7 +65,8 @@ export function LoginScreen() {
           />
 
           <Input
-            onChangeText={(vl) => handleChange(vl, 'password')}
+            name="password"
+            control={control}
             placeholder="Senha"
             type="secondary"
             autoCorrect={false}
@@ -71,7 +82,7 @@ export function LoginScreen() {
 
           <Button
             isLoading={isLoading}
-            onPress={handleLogin}
+            onPress={handleSubmit(handleLogin) as any}
             text="Entrar"
             type="secondary"
           />
@@ -80,3 +91,5 @@ export function LoginScreen() {
     </Container>
   );
 }
+
+export { LoginScreen };

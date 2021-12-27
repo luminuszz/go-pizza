@@ -1,14 +1,23 @@
 import React from 'react';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationOptions,
+} from '@react-navigation/native-stack';
 import { LoginScreen } from '@screens/auth/SignIn';
 
-const Stack = createNativeStackNavigator();
+import { PublicRouteStackParamsList } from '@core/config/routes/types.routes';
+
+const Stack = createNativeStackNavigator<PublicRouteStackParamsList>();
+
+const options: NativeStackNavigationOptions = {
+  headerShown: false,
+};
 
 export function PublicRoutes() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="login" component={LoginScreen} />
+    <Stack.Navigator screenOptions={options} initialRouteName="Login">
+      <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );
 }

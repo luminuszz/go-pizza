@@ -49,7 +49,6 @@ const sessionSlice = createSlice({
 });
 
 // action
-
 export const { resetUser } = sessionSlice.actions;
 
 // selectors
