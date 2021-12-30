@@ -1,6 +1,6 @@
 import { RectButton } from 'react-native-gesture-handler';
 
-import styled, { css } from 'styled-components/native';
+import styled, { css, DefaultTheme } from 'styled-components/native';
 
 export type Type = 'primary' | 'secondary';
 
@@ -22,7 +22,7 @@ export const Container = styled(RectButton)<ContainerProps>`
 `;
 
 export const Title = styled.Text`
-  font-size: 14px;
+  font-size: ${({ theme }) => theme.utils.RFValue(14)};
 
   ${({ theme }) => css`
     color: ${theme.colors.TITLE};

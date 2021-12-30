@@ -15,10 +15,7 @@ export function useTheme(): UseThemeType {
 
   const currentTheme = useAppSelector(getCurrentTheme);
 
-  const theme = useMemo(
-    () => themes[currentTheme || 'default'],
-    [currentTheme],
-  );
+  const theme = useMemo(() => themes[currentTheme], [currentTheme]);
 
   const changeTheme = () => dispatch(toggleTheme());
 

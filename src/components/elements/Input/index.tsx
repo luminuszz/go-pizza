@@ -18,13 +18,19 @@ export function Input({
   ...props
 }: Props) {
   const { field } = useController({
-    control: control || null,
+    control,
     defaultValue: defaultValue || null,
     name,
   });
 
   return control ? (
-    <Container type={type} {...field} {...props} />
+    <Container
+      type={type}
+      onChangeText={field.onChange}
+      onBlur={field.onBlur}
+      value={field.value}
+      {...props}
+    />
   ) : (
     <Container type={type} {...props} />
   );

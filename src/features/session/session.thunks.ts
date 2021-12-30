@@ -1,3 +1,4 @@
+import { resetUser } from '@features/session/session.slice';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { firebaseAuth } from '@core/services/firebase/auth';
@@ -18,10 +19,23 @@ export const loginWithEmailAndPasswordThunk = createAsyncThunk<
     .getRepository('USER')
     .getById(userByAuth.uid);
 
+  if (!storedUser) {
+    throw new Error('user not found in database');
+  }
+
   return {
-    name: storedUser.name,
-    email: userByAuth.email,
     id: userByAuth.uid,
+    name: storedUser.name,
+    email: storedUser.email,
     isAdmin: storedUser.isAdmin,
   };
 });
+
+export const logoutWithEmailAndPassword = createAsyncThunk(
+  'logoutWithEmailAndPassword',
+  async (_, { dispatch }) => {
+    await firebaseAuth.logoutWithEmailAndPassword();
+
+    dispatch(resetUser());
+  },
+);

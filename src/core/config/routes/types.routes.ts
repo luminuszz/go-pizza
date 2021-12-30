@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type AppRouteStackParamsList = {
   Home: undefined;
+  CreateProduct: undefined;
 };
 
 export type NavigatorAppScreenProps<T extends keyof AppRouteStackParamsList> =
@@ -11,6 +12,7 @@ export type NavigatorAppScreenProps<T extends keyof AppRouteStackParamsList> =
 // Public routes
 export type PublicRouteStackParamsList = {
   Login: undefined;
+  ForgotPassword: undefined;
 };
 
 export type NavigatorPublicScreenProps<

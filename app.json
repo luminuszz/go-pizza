@@ -3,8 +3,14 @@
     "name": "go-pizza",
     "slug": "go-pizza",
     "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
+    "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Para fazer carregar imagens é preciso permissão da camera"
+        }
+      ]
     ]
   },
   "name": "go-pizza"

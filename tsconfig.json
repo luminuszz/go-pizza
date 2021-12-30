@@ -1,8 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "strict": true,
     "module": "es2020",
     "baseUrl": "./",
+    "alwaysStrict": true,
     "paths": {
       "@/*": ["./src/*"],
       "@core/*": ["./src/core/*"],
@@ -10,7 +12,8 @@
       "@styles/*": ["./src/styles/*"],
       "@screens/*": ["./src/screens/*"],
       "@assets/*": ["./src/assets/*"],
-      "@features/*": ["./src/features/*"],
+      "@features/*": ["./src/features/*"]
+
     }
   },
 

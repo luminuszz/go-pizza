@@ -1,4 +1,7 @@
-import { loginWithEmailAndPasswordThunk } from '@features/session/session.thunks';
+import {
+  loginWithEmailAndPasswordThunk,
+  logoutWithEmailAndPassword,
+} from '@features/session/session.thunks';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { AsyncStatus, RootState } from '@core/types/redux.type';
@@ -12,7 +15,7 @@ interface SessionSlice {
 
 const initialState: SessionSlice = {
   user: null,
-  status: AsyncStatus.normal,
+  status: AsyncStatus.idle,
   error: null,
 };
 
@@ -24,6 +27,10 @@ const sessionSlice = createSlice({
   reducers: {
     resetUser: (state) => {
       state.user = null;
+    },
+
+    resetSessionStatus: (state) => {
+      state.status = AsyncStatus.idle;
     },
   },
 
@@ -42,14 +49,22 @@ const sessionSlice = createSlice({
       loginWithEmailAndPasswordThunk.fulfilled,
       (state, { payload }: PayloadAction<User>) => {
         state.user = payload;
-        state.status = AsyncStatus.fulfilled;
+        state.status = AsyncStatus.succeeded;
       },
     );
+
+    build.addCase(logoutWithEmailAndPassword.rejected, (state) => {
+      state.status = AsyncStatus.rejected;
+    });
+
+    build.addCase(logoutWithEmailAndPassword.fulfilled, (state) => {
+      state.status = AsyncStatus.succeeded;
+    });
   },
 });
 
 // action
-export const { resetUser } = sessionSlice.actions;
+export const { resetUser, resetSessionStatus } = sessionSlice.actions;
 
 // selectors
 export const getUser = (state: RootState) => state.session.user;

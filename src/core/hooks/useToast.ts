@@ -12,7 +12,7 @@ export function useToast() {
     title,
     type,
   }: Message): ReactNativeToastMessage => ({
-    type,
+    type: type || 'info',
     text1: title,
     text2: description,
   });
@@ -25,6 +25,6 @@ export function useToast() {
       Toast.show(createMessage({ ...toast, type: 'error' })),
 
     info: (toast: MessageWithoutType) =>
-      Toast.show(createMessage({ ...toast, type: 'info' })),
+      Toast.show(createMessage({ ...toast })),
   };
 }

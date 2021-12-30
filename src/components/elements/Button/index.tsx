@@ -6,16 +6,23 @@ import {
 
 import { Load, Type, Container, Title } from './styles';
 
-type Props = RectButtonProps & {
+interface Props extends RectButtonProps {
   type?: Type;
   text: string;
   isLoading?: boolean;
-};
+  onPress?: any;
+}
 
-export function Button({ type = 'primary', text, isLoading, ...props }: Props) {
+export function Button({
+  type = 'primary',
+  text,
+  isLoading,
+  onPress,
+  ...props
+}: Props) {
   return (
     <GestureHandlerRootView>
-      <Container type={type} enabled={!isLoading} {...props}>
+      <Container type={type} enabled={!isLoading} onPress={onPress} {...props}>
         {isLoading ? <Load /> : <Title>{text}</Title>}
       </Container>
     </GestureHandlerRootView>

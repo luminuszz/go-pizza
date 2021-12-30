@@ -4,7 +4,7 @@ import firestore, {
 
 import { FireStoreBaseError } from '@core/services/firebase/firestore/firestore.error';
 
-import { FirestoreUser } from './types.firestore';
+import { FirestoreExceptionCode, FirestoreUser } from './types.firestore';
 
 enum EntitiesMap {
   USER = 'users',
@@ -17,9 +17,25 @@ type Entities = {
 type EntitiesKey = keyof typeof EntitiesMap;
 
 class FireStoreDatabase {
+  static _instance: FireStoreDatabase;
+
+  static execute() {
+    if (!FireStoreDatabase._instance) {
+      FireStoreDatabase._instance = new FireStoreDatabase();
+    }
+
+    return FireStoreDatabase._instance;
+  }
+
   private readonly connection = firestore();
 
+  // @ts-ignore
   private collection: FirebaseFirestoreTypes.CollectionReference<FirebaseFirestoreTypes.DocumentData>;
+
+  constructor() {
+    this.getById = this.getById.bind(this);
+    this.getRepository = this.getRepository.bind(this);
+  }
 
   getRepository(entityMapKey: EntitiesKey) {
     this.collection = this.connection.collection(EntitiesMap[entityMapKey]);
@@ -29,13 +45,15 @@ class FireStoreDatabase {
     };
   }
 
-  private async getById(id: string): Promise<FirestoreUser> {
+  private async getById(id: string): Promise<FirestoreUser | null> {
     try {
-      return (await this.collection.doc(id).get()) as unknown as FirestoreUser;
+      const ref = await this.collection.doc(id).get();
+
+      return ref.exists ? (ref.data() as FirestoreUser) : null;
     } catch (e) {
-      throw new FireStoreBaseError(e);
+      throw new FireStoreBaseError(e as any);
     }
   }
 }
 
-export const firebaseFirestore = new FireStoreDatabase();
+export const firebaseFirestore = FireStoreDatabase.execute();

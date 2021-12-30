@@ -13,8 +13,22 @@ class FirebaseAuth {
         password,
       );
     } catch (e) {
-      console.log({ e });
+      throw new FireAuthBaseError(e);
+    }
+  }
 
+  async logoutWithEmailAndPassword() {
+    try {
+      await this.firebaseAuth.signOut();
+    } catch (e) {
+      throw new FireAuthBaseError(e);
+    }
+  }
+
+  async sendEmailForgotPassword(email: string) {
+    try {
+      await this.firebaseAuth.sendPasswordResetEmail(email);
+    } catch (e) {
       throw new FireAuthBaseError(e);
     }
   }

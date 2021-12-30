@@ -5,17 +5,22 @@ import {
   getSessionStatus,
   getSessionError,
   getUser,
-  resetUser,
 } from '@features/session/session.slice';
-import { loginWithEmailAndPasswordThunk } from '@features/session/session.thunks';
+import {
+  loginWithEmailAndPasswordThunk,
+  logoutWithEmailAndPassword,
+} from '@features/session/session.thunks';
 
+import { useFirebase } from '@core/hooks/useFirebase';
 import { useAppSelector } from '@core/hooks/useRedux';
 import { useToast } from '@core/hooks/useToast';
+import { FireAuthBaseError } from '@core/services/firebase/auth/auth.error';
 import { AsyncStatus } from '@core/types/redux.type';
 import { User } from '@core/types/user.type';
 
 type UseAuthType = {
   loginWithEmailAndPassword: (email: string, password: string) => void;
+  sendForgotEmailPassword: (email: string) => Promise<void>;
   logout: () => void;
   user: User | null;
   isAuthenticated: boolean;
@@ -25,6 +30,7 @@ type UseAuthType = {
 export function useAuth(): UseAuthType {
   const notify = useToast();
   const appDispatch = useDispatch();
+  const { auth } = useFirebase();
 
   const user = useAppSelector(getUser);
   const error = useAppSelector(getSessionError);
@@ -32,8 +38,6 @@ export function useAuth(): UseAuthType {
 
   const isAuthenticated = useMemo(() => !!user, [user]);
   const isLoading = useMemo(() => status === 'pending', [status]);
-
-  const logout = useCallback(() => appDispatch(resetUser()), [appDispatch]);
 
   const loginWithEmailAndPassword = useCallback(
     (email: string, password: string) =>
@@ -46,15 +50,41 @@ export function useAuth(): UseAuthType {
     [appDispatch],
   );
 
+  const logout = useCallback(
+    () => appDispatch(logoutWithEmailAndPassword()),
+    [appDispatch],
+  );
+
+  const sendForgotEmailPassword = useCallback(
+    async (email: string) => {
+      auth
+        .sendEmailForgotPassword(email)
+        .then(() => {
+          notify.success({
+            title: 'E-mail enviado',
+            description: 'Verifique sua caixa de entrada',
+          });
+        })
+        .catch((e) => {
+          if (e instanceof FireAuthBaseError) {
+            notify.error({
+              title: e.message,
+            });
+          }
+        });
+    },
+    [auth, notify],
+  );
+
   useEffect(() => {
     if (error && status === AsyncStatus.rejected) {
       notify.error({
         title: error.message,
       });
     }
-    if (user && status === AsyncStatus.fulfilled) {
+    if (user && status === AsyncStatus.succeeded) {
       notify.success({
-        title: `Login feito com sucesso, Bem vindo ${user.name}`,
+        title: `Login feito com sucesso ! Bem vindo ${user.name}`,
       });
     }
   }, [error, user, status, notify]);
@@ -65,5 +95,6 @@ export function useAuth(): UseAuthType {
     loginWithEmailAndPassword,
     logout,
     isLoading,
+    sendForgotEmailPassword,
   };
 }

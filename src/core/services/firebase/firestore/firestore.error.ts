@@ -11,8 +11,13 @@ export class FireStoreBaseError extends Error {
 
   message: string;
 
+  originalMessage: string;
+
   constructor(error: FirestoreExceptionErrorShape) {
     super();
+    this.message = '';
+    this.code = '';
+    this.originalMessage = this.message;
     this.handleError(error);
   }
 
@@ -27,9 +32,11 @@ export class FireStoreBaseError extends Error {
       const [currentErrorKey, currentCodeErroValue] = currentError;
 
       this.code = currentCodeErroValue;
-      this.message = strings.user[currentErrorKey];
+      this.message =
+        strings.user[currentErrorKey as keyof typeof FirestoreExceptionCode];
     } else {
       this.code = FirestoreExceptionCode.genericError;
+      this.message = strings.user.genericError;
     }
   }
 }

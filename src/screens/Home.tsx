@@ -1,23 +1,32 @@
-import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
+import { logoutWithEmailAndPassword } from '@features/session/session.thunks';
 
-import { NavigatorAppScreenProps } from '@core/config/routes/types.routes';
 import { useAppDispatch } from '@core/hooks/useRedux';
-
-type Props = NavigatorAppScreenProps<'Home'> & {};
 
 export function Home() {
   const appDispatch = useAppDispatch();
 
-  const { navigation } = useNavigation<NavigatorAppScreenProps<'Home'>>();
-
-  navigation.navigate('Home');
+  function handleLogout() {
+    appDispatch(logoutWithEmailAndPassword());
+  }
 
   return (
     <View>
       <Text>Algo aqui</Text>
+
+      <TouchableOpacity
+        onPress={handleLogout}
+        style={{
+          marginTop: 50,
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }

@@ -6,37 +6,38 @@ import brandImg from '@assets/brand.png';
 import { Button } from '@components/elements/Button';
 import { Input } from '@components/elements/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  ForgotPasswordButton,
+  ForgotPasswordButtonLabel,
+} from '@screens/auth/SignIn/styles';
 
 import { NavigatorPublicScreenProps } from '@core/config/routes/types.routes';
 import { useAuth } from '@core/hooks/useAuth';
 import {
-  UserLoginPayload,
-  userLoginPayloadSchema,
+  UserForgotPassword,
+  userForgotPasswordSchema,
 } from '@core/types/user.type';
 
-import {
-  Container,
-  Content,
-  Title,
-  Brand,
-  ForgotPasswordButton,
-  ForgotPasswordButtonLabel,
-} from './styles';
+import { Container, Content, Title, Brand } from './styles';
 
-type Props = NavigatorPublicScreenProps<'Login'>;
+type Props = NavigatorPublicScreenProps<'ForgotPassword'>;
 
-function LoginScreen({ navigation }: Props) {
-  const { loginWithEmailAndPassword, isLoading } = useAuth();
-  const { control, handleSubmit } = useForm<UserLoginPayload>({
-    resolver: zodResolver(userLoginPayloadSchema),
+function ForgotPasswordScreen({ navigation }: Props) {
+  const { sendForgotEmailPassword, isLoading } = useAuth();
+  const { control, handleSubmit } = useForm<UserForgotPassword>({
+    resolver: zodResolver(userForgotPasswordSchema),
     defaultValues: {
       email: '',
-      password: '',
     },
   });
 
-  function handleLogin({ email, password }: UserLoginPayload) {
-    loginWithEmailAndPassword(email.trim(), password.trim());
+  function handleSendEmailForgotPassword({ email }: UserForgotPassword) {
+    sendForgotEmailPassword(email).then(() => {
+      navigation.navigate({
+        name: 'Login',
+        params: undefined,
+      });
+    });
   }
 
   return (
@@ -47,7 +48,7 @@ function LoginScreen({ navigation }: Props) {
         <Content>
           <Brand source={brandImg} />
 
-          <Title>Login</Title>
+          <Title>Esqueci minha senha</Title>
           <Input
             name="email"
             control={control}
@@ -57,33 +58,21 @@ function LoginScreen({ navigation }: Props) {
             autoCapitalize="none"
           />
 
-          <Input
-            name="password"
-            control={control}
-            placeholder="Senha"
-            type="secondary"
-            autoCorrect={false}
-            autoCapitalize="none"
-            secureTextEntry
-          />
-
           <ForgotPasswordButton
             onPress={() =>
-              navigation.navigate({
-                name: 'ForgotPassword',
-                params: undefined,
-              })
+              navigation.navigate({ name: 'Login', params: undefined })
             }
+            disabled={isLoading}
           >
             <ForgotPasswordButtonLabel>
-              Esqueci minha senha
+              Voltar para o login
             </ForgotPasswordButtonLabel>
           </ForgotPasswordButton>
 
           <Button
             isLoading={isLoading}
-            onPress={handleSubmit(handleLogin) as any}
-            text="Entrar"
+            onPress={handleSubmit(handleSendEmailForgotPassword) as any}
+            text="Enviar email de recuperação"
             type="secondary"
           />
         </Content>
@@ -92,4 +81,4 @@ function LoginScreen({ navigation }: Props) {
   );
 }
 
-export { LoginScreen };
+export { ForgotPasswordScreen };
