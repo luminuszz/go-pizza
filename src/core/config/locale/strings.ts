@@ -11,13 +11,14 @@ type PermissionsMessage = CreateMessageType<
   'cameraError' | 'imageGalleryError'
 >;
 
-type Strings = {
+interface Strings extends Object {
   sessionError: SessionError;
   user: UserError;
   permissions: PermissionsMessage;
-};
+  [key: string]: Object;
+}
 
-const strings: Strings = {
+const strings = {
   sessionError: {
     userNotFound: 'Usuário não encontrado',
     wrongPassword: 'Senha inválida',
@@ -32,6 +33,19 @@ const strings: Strings = {
   permissions: {
     cameraError: 'Permissão para camera necessária',
     imageGalleryError: 'Permissão para galeria ncessária ',
+  },
+
+  pages: {
+    createProduct: {
+      labels: {
+        name: 'Nome',
+        description: 'Descrição',
+        maxCharactersHelperText: (value: string | number) =>
+          `${value} de 60 characters`,
+
+        sizesAndPricesTitle: 'Tamanhos e preços',
+      },
+    },
   },
 };
 

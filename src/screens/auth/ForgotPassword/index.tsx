@@ -4,7 +4,7 @@ import { KeyboardAvoidingView, Platform } from 'react-native';
 
 import brandImg from '@assets/brand.png';
 import { Button } from '@components/elements/Button';
-import { Input } from '@components/elements/Input';
+import { Input } from '@components/elements/form/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ForgotPasswordButton,

@@ -10,7 +10,7 @@ type Props = TextInputProps & {
   name: string;
 };
 
-export function Input({
+function Input({
   type = 'primary',
   control,
   defaultValue,
@@ -35,3 +35,5 @@ export function Input({
     <Container type={type} {...props} />
   );
 }
+
+export { Input };

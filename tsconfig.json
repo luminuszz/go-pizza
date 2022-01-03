@@ -7,14 +7,13 @@
     "alwaysStrict": true,
     "paths": {
       "@/*": ["./src/*"],
+      "@app/*": ["./src/*"],
       "@core/*": ["./src/core/*"],
       "@components/*": ["./src/components/*"],
       "@styles/*": ["./src/styles/*"],
       "@screens/*": ["./src/screens/*"],
       "@assets/*": ["./src/assets/*"],
       "@features/*": ["./src/features/*"]
-
     }
-  },
-
+  }
 }

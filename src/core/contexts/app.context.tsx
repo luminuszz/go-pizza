@@ -25,7 +25,9 @@ export const AppProvider: React.FC = ({ children }) => {
     <PersistGate persistor={persistor} loading={<AppLoading />}>
       <ThemeProvider theme={theme}>
         <StatusBar translucent style="auto" backgroundColor="transparent" />
-        {children}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          {children}
+        </GestureHandlerRootView>
         <Toast />
       </ThemeProvider>
     </PersistGate>

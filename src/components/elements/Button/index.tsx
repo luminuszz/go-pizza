@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   GestureHandlerRootView,
+  RectButton,
   RectButtonProps,
 } from 'react-native-gesture-handler';
 

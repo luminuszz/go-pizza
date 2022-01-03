@@ -22,7 +22,6 @@ type UsePickImageReturn = {
 
 export function usePickImage(options?: ImagePickerOptions): UsePickImageReturn {
   const notify = useToast();
-
   const [imagePicked, setImagePicked] = useState<Image>(null);
 
   const getPermission = async (permissionFrom: PermissionFrom) => {
