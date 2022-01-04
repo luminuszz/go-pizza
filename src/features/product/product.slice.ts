@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { Product } from '@core/types/product.types';
-import { AsyncStatus } from '@core/types/redux.type';
+import { AsyncStatus, RootState } from '@core/types/redux.type';
 
 import { createProduct } from './product.thunks';
 
@@ -40,6 +40,9 @@ const productSlice = createSlice({
   },
 });
 
-export const {} = productSlice.actions;
+// selectors
+
+export const getProductStatus = (state: RootState) => state.product.status;
+export const getProductError = (state: RootState) => state.product.error;
 
 export default productSlice.reducer;

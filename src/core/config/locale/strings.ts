@@ -47,6 +47,11 @@ const strings = {
 
         sizesAndPricesTitle: 'Tamanhos e preços',
       },
+
+      messages: {
+        success: 'Produto criado com sucesso !',
+        error: 'Houve um erro na criação do produto',
+      },
     },
   },
   validationsMessages,

@@ -4,17 +4,21 @@ import firestore, {
 
 import { FireStoreBaseError } from '@core/services/firebase/firestore/firestore.error';
 
-import { FirestoreExceptionCode, FirestoreUser } from './types.firestore';
+import { FirestoreProduct, FirestoreUser } from './types.firestore';
 
 enum EntitiesMap {
   USER = 'users',
+  PRODUCT = 'products',
 }
 
 type Entities = {
-  users: FirestoreUser;
+  USER: FirestoreUser;
+  PRODUCT: FirestoreProduct;
 };
 
-type EntitiesKey = keyof typeof EntitiesMap;
+type EntitiesKey = keyof Entities;
+
+type EntitySchema<T extends EntitiesKey> = Entities[T];
 
 class FireStoreDatabase {
   static _instance: FireStoreDatabase;
@@ -35,14 +39,26 @@ class FireStoreDatabase {
   constructor() {
     this.getById = this.getById.bind(this);
     this.getRepository = this.getRepository.bind(this);
+    this.save = this.save.bind(this);
   }
 
-  getRepository(entityMapKey: EntitiesKey) {
+  getRepository<T extends EntitiesKey>(entityMapKey: T) {
     this.collection = this.connection.collection(EntitiesMap[entityMapKey]);
 
     return {
       getById: this.getById,
+      save: (values: EntitySchema<T>) => this.save(values),
     };
+  }
+
+  private async save<T extends EntitiesKey>(
+    payload: EntitySchema<EntitiesKey>,
+  ) {
+    try {
+      await this.collection.add(payload);
+    } catch (e) {
+      throw new FireStoreBaseError(e as any);
+    }
   }
 
   private async getById(id: string): Promise<FirestoreUser | null> {

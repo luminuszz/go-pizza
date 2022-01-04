@@ -13,12 +13,13 @@ const BaseProductSchema = z.object({
   pPrice: IsStringOrNumberValid,
   mPrice: IsStringOrNumberValid,
   gPrice: IsStringOrNumberValid,
+  slug: IsString,
 });
 
-const ProductSchema = BaseProductSchema.merge(WithId);
+const ProductSchema = BaseProductSchema;
 
 export type Product = z.infer<typeof ProductSchema>;
 
-export const createProductSchema = ProductSchema.omit({ id: true });
+export const createProductSchema = ProductSchema.omit({ slug: true });
 
-export type CreateProduct = z.infer<typeof createProductSchema>;
+export type CreateProductPayload = z.infer<typeof createProductSchema>;

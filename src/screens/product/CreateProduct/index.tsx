@@ -8,15 +8,26 @@ import { Input } from '@components/elements/form/Input';
 import { InputPrice } from '@components/elements/form/InputPrice';
 import { Photo } from '@components/elements/Photo';
 import { Header } from '@components/layout/Header';
+import {
+  getProductError,
+  getProductStatus,
+} from '@features/product/product.slice';
+import { createProduct } from '@features/product/product.thunks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MediaTypeOptions } from 'expo-image-picker';
-import { isEmpty } from 'lodash';
 
 import strings from '@core/config/locale/strings';
 import { NavigatorAppScreenProps } from '@core/config/routes/types.routes';
 import { toCents } from '@core/helpers/currencry';
 import { usePickImage } from '@core/hooks/usePickImage';
-import { createProductSchema, CreateProduct } from '@core/types/product.types';
+import { useAppDispatch, useAppSelector } from '@core/hooks/useRedux';
+import { useToast } from '@core/hooks/useToast';
+import {
+  createProductSchema,
+  Product,
+  CreateProductPayload,
+} from '@core/types/product.types';
+import { AsyncStatus } from '@core/types/redux.type';
 
 import {
   Container,
@@ -34,19 +45,27 @@ import {
 type Props = NavigatorAppScreenProps<'CreateProduct'> & {};
 
 function CreateProductScreen() {
+  const appDispatch = useAppDispatch();
+  const notify = useToast();
+
+  const productStatus = useAppSelector(getProductStatus);
+  const productError = useAppSelector(getProductError);
+
+  const isLoading = productStatus === AsyncStatus.pending;
+
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<CreateProduct>({
+  } = useForm<CreateProductPayload>({
     defaultValues: {
       description: '',
     },
     resolver: zodResolver(createProductSchema),
   });
 
-  const { labels } = strings.pages.createProduct;
+  const { labels, messages } = strings.pages.createProduct;
 
   const { image, pickImageFromImageLibrary } = usePickImage({
     mediaTypes: MediaTypeOptions.Images,
@@ -55,25 +74,33 @@ function CreateProductScreen() {
 
   const description = watch('description');
 
-  function handleCreateProduct(formValues: CreateProduct) {
-    const payload: CreateProduct = {
+  function handleCreateProduct(formValues: CreateProductPayload) {
+    const payload: Product = {
       ...formValues,
       imageUrl: image?.uri || null,
       gPrice: toCents(formValues.gPrice),
       mPrice: toCents(formValues.mPrice),
       pPrice: toCents(formValues.pPrice),
+      slug: formValues.name.toLowerCase().trim(),
     };
 
-    console.log({
-      payload,
-    });
+    appDispatch(createProduct(payload));
   }
 
   useEffect(() => {
-    if (!isEmpty(errors)) {
-      console.log({ errors });
+    if (productError && productStatus === AsyncStatus.rejected) {
+      notify.error({
+        title: 'Produto',
+        description: messages.error,
+      });
     }
-  }, [errors]);
+    if (productStatus === AsyncStatus.succeeded) {
+      notify.success({
+        title: 'Produto',
+        description: messages.success,
+      });
+    }
+  }, [notify, productError, productStatus]);
 
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -90,8 +117,9 @@ function CreateProductScreen() {
         <Upload>
           <Photo uri={image?.uri || null} />
           <PickButton
+            isLoading={isLoading}
             type="secondary"
-            text="Algo aqui"
+            text="Escolher"
             onPress={pickImageFromImageLibrary}
           />
         </Upload>
@@ -145,6 +173,7 @@ function CreateProductScreen() {
           </InputGroup>
 
           <Button
+            isLoading={isLoading}
             type="primary"
             text="Cadastrar pizza"
             onPress={handleSubmit(handleCreateProduct)}
