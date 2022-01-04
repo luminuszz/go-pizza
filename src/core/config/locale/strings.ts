@@ -1,6 +1,8 @@
 import { ExceptionsCodes } from '@core/services/firebase/auth/auth.error';
 import { FirestoreExceptionCode } from '@core/services/firebase/firestore/types.firestore';
 
+import validationsMessages from './validationsMessages';
+
 type CreateMessageType<T extends string> = Record<T, string>;
 
 type SessionError = Record<keyof typeof ExceptionsCodes, string>;
@@ -47,6 +49,7 @@ const strings = {
       },
     },
   },
+  validationsMessages,
 };
 
 export default strings;

@@ -1,4 +1,3 @@
-import { resetUser } from '@features/session/session.slice';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { firebaseAuth } from '@core/services/firebase/auth';
@@ -33,9 +32,7 @@ export const loginWithEmailAndPasswordThunk = createAsyncThunk<
 
 export const logoutWithEmailAndPassword = createAsyncThunk(
   'logoutWithEmailAndPassword',
-  async (_, { dispatch }) => {
+  async () => {
     await firebaseAuth.logoutWithEmailAndPassword();
-
-    dispatch(resetUser());
   },
 );

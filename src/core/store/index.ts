@@ -14,6 +14,7 @@ import {
 import { Collections } from '@core/services/localStorage';
 import { withPersist } from '@core/store/middlewares/withPersist';
 
+import productReducer from '../../features/product/product.slice';
 import sessionReducer from '../../features/session/session.slice';
 
 const customMiddlewares: Middleware[] = [];
@@ -25,6 +26,7 @@ const Store = configureStore({
   reducer: {
     theme: withPersist(Collections.theme, themeReducer),
     session: withPersist(Collections.users, sessionReducer),
+    product: productReducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware({

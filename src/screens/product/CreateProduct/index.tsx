@@ -10,6 +10,7 @@ import { Photo } from '@components/elements/Photo';
 import { Header } from '@components/layout/Header';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MediaTypeOptions } from 'expo-image-picker';
+import { isEmpty } from 'lodash';
 
 import strings from '@core/config/locale/strings';
 import { NavigatorAppScreenProps } from '@core/config/routes/types.routes';
@@ -33,13 +34,17 @@ import {
 type Props = NavigatorAppScreenProps<'CreateProduct'> & {};
 
 function CreateProductScreen() {
-  const { control, handleSubmit, watch, setValue, formState } =
-    useForm<CreateProduct>({
-      defaultValues: {
-        description: '',
-      },
-      resolver: zodResolver(createProductSchema),
-    });
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<CreateProduct>({
+    defaultValues: {
+      description: '',
+    },
+    resolver: zodResolver(createProductSchema),
+  });
 
   const { labels } = strings.pages.createProduct;
 
@@ -53,21 +58,22 @@ function CreateProductScreen() {
   function handleCreateProduct(formValues: CreateProduct) {
     const payload: CreateProduct = {
       ...formValues,
+      imageUrl: image?.uri || null,
       gPrice: toCents(formValues.gPrice),
       mPrice: toCents(formValues.mPrice),
       pPrice: toCents(formValues.pPrice),
     };
 
-    console.log({ payload });
+    console.log({
+      payload,
+    });
   }
 
   useEffect(() => {
-    if (image) {
-      setValue('imageUrl', image.uri);
+    if (!isEmpty(errors)) {
+      console.log({ errors });
     }
-  }, [image, setValue]);
-
-  console.log(formState.errors);
+  }, [errors]);
 
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -93,7 +99,7 @@ function CreateProductScreen() {
         <Form>
           <InputGroup>
             <Label>{labels.name}</Label>
-            <Input name="name" control={control} />
+            <Input name="name" control={control} error={errors.name} />
           </InputGroup>
           <InputGroup>
             <InputGroupHeader>
@@ -110,23 +116,27 @@ function CreateProductScreen() {
               style={{
                 height: 80,
               }}
+              error={errors.description}
             />
           </InputGroup>
           <InputGroup>
             <Label>{labels.sizesAndPricesTitle}</Label>
             <InputPrice
+              error={errors.pPrice}
               name="pPrice"
               control={control}
               size="P"
               currency="R$"
             />
             <InputPrice
+              error={errors.mPrice}
               name="mPrice"
               control={control}
               size="M"
               currency="R$"
             />
             <InputPrice
+              error={errors.gPrice}
               name="gPrice"
               control={control}
               size="G"
@@ -135,7 +145,7 @@ function CreateProductScreen() {
           </InputGroup>
 
           <Button
-            type="secondary"
+            type="primary"
             text="Cadastrar pizza"
             onPress={handleSubmit(handleCreateProduct)}
           />

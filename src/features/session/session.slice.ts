@@ -59,6 +59,7 @@ const sessionSlice = createSlice({
 
     build.addCase(logoutWithEmailAndPassword.fulfilled, (state) => {
       state.status = AsyncStatus.succeeded;
+      state.user = null;
     });
   },
 });

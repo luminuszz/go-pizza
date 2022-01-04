@@ -1,16 +1,21 @@
 import { z } from 'zod';
 
-const stringOrNumber = z.union([z.string().nonempty(), z.number().positive()]);
+import {
+  IsStringOrNumberValid,
+  IsString,
+  WithId,
+} from '@core/helpers/validationTypes';
 
-const ProductSchema = z.object({
-  id: z.string().nonempty(),
-  name: z.string().nonempty(),
-  description: z.string().nonempty().max(60),
-  pPrice: stringOrNumber,
-  mPrice: stringOrNumber,
-  gPrice: stringOrNumber,
-  imageUrl: z.string().optional(),
+const BaseProductSchema = z.object({
+  name: IsString,
+  description: IsString.max(60),
+  imageUrl: IsString.nullable().optional(),
+  pPrice: IsStringOrNumberValid,
+  mPrice: IsStringOrNumberValid,
+  gPrice: IsStringOrNumberValid,
 });
+
+const ProductSchema = BaseProductSchema.merge(WithId);
 
 export type Product = z.infer<typeof ProductSchema>;
 

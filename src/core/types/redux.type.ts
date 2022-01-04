@@ -20,4 +20,8 @@ enum AsyncStatus {
   idle = 'idle',
 }
 
-export { RootState, AppDispatch, AsyncStatus, AppThunk };
+interface Slice {
+  status: AsyncStatus;
+}
+
+export { RootState, AppDispatch, AsyncStatus, AppThunk, Slice };

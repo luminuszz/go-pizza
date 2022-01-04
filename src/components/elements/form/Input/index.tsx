@@ -2,12 +2,20 @@ import React from 'react';
 import { Control, useController } from 'react-hook-form';
 import type { TextInputProps } from 'react-native';
 
-import { Container, Type } from './styles';
+import {
+  Container,
+  Type,
+  ErrorMessageHelperContent,
+  ErrorMessageHelperText,
+} from './styles';
 
 type Props = TextInputProps & {
   type?: Type;
   control?: Control<any>;
   name: string;
+  error?: {
+    message?: string;
+  };
 };
 
 function Input({
@@ -15,6 +23,7 @@ function Input({
   control,
   defaultValue,
   name,
+  error,
   ...props
 }: Props) {
   const { field } = useController({
@@ -23,16 +32,28 @@ function Input({
     name,
   });
 
+  console.log({
+    error,
+  });
+
   return control ? (
-    <Container
-      type={type}
-      onChangeText={field.onChange}
-      onBlur={field.onBlur}
-      value={field.value}
-      {...props}
-    />
+    <>
+      <Container
+        isError={!!error}
+        type={type}
+        onChangeText={field.onChange}
+        onBlur={field.onBlur}
+        value={field.value}
+        {...props}
+      />
+      {!!error && (
+        <ErrorMessageHelperContent>
+          <ErrorMessageHelperText>{error?.message}</ErrorMessageHelperText>
+        </ErrorMessageHelperContent>
+      )}
+    </>
   ) : (
-    <Container type={type} {...props} />
+    <Container isError={!!error} type={type} {...props} />
   );
 }
 
