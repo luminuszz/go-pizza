@@ -1,27 +1,27 @@
 import {
   loginWithEmailAndPasswordThunk,
   logoutWithEmailAndPassword,
-} from '@features/session/session.thunks';
+} from '@features/auth/auth.thunks';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { AsyncStatus, RootState } from '@core/types/redux.type';
 import { User } from '@core/types/user.type';
 
-interface SessionSlice {
+type AuthSlice = {
   user: User | null;
   status: keyof typeof AsyncStatus;
   error: any;
-}
+};
 
-const initialState: SessionSlice = {
+const initialState: AuthSlice = {
   user: null,
   status: AsyncStatus.idle,
   error: null,
 };
 
-const REDUCER_NAME = 'session';
+const REDUCER_NAME = 'auth';
 
-const sessionSlice = createSlice({
+const authSlice = createSlice({
   name: REDUCER_NAME,
   initialState,
   reducers: {
@@ -65,11 +65,11 @@ const sessionSlice = createSlice({
 });
 
 // action
-export const { resetUser, resetSessionStatus } = sessionSlice.actions;
+export const { resetUser, resetSessionStatus } = authSlice.actions;
 
 // selectors
-export const getUser = (state: RootState) => state.session.user;
-export const getSessionError = (state: RootState) => state.session.error;
-export const getSessionStatus = (state: RootState) => state.session.status;
+export const getUser = (state: RootState) => state.auth.user;
+export const getSessionError = (state: RootState) => state.auth.error;
+export const getSessionStatus = (state: RootState) => state.auth.status;
 
-export default sessionSlice.reducer;
+export default authSlice.reducer;

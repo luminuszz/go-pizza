@@ -5,11 +5,11 @@ import {
   getSessionStatus,
   getSessionError,
   getUser,
-} from '@features/session/session.slice';
+} from '@features/auth/auth.slice';
 import {
   loginWithEmailAndPasswordThunk,
   logoutWithEmailAndPassword,
-} from '@features/session/session.thunks';
+} from '@features/auth/auth.thunks';
 
 import { useFirebase } from '@core/hooks/useFirebase';
 import { useAppSelector } from '@core/hooks/useRedux';

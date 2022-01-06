@@ -20,6 +20,10 @@ type EntitiesKey = keyof Entities;
 
 type EntitySchema<T extends EntitiesKey> = Entities[T];
 
+type CreateEntity<T extends EntitiesKey> = Omit<EntitySchema<T>, 'id'>;
+
+type MapEntity<T extends EntitiesKey> = Record<string, Entities[T]>;
+
 class FireStoreDatabase {
   static _instance: FireStoreDatabase;
 
@@ -40,6 +44,7 @@ class FireStoreDatabase {
     this.getById = this.getById.bind(this);
     this.getRepository = this.getRepository.bind(this);
     this.save = this.save.bind(this);
+    this.getAll = this.getAll.bind(this);
   }
 
   getRepository<T extends EntitiesKey>(entityMapKey: T) {
@@ -47,12 +52,28 @@ class FireStoreDatabase {
 
     return {
       getById: this.getById,
-      save: (values: EntitySchema<T>) => this.save(values),
+      save: (values: CreateEntity<T>) => this.save(values),
+      getAll: () => this.getAll<T>(),
     };
   }
 
+  private async getAll<T extends EntitiesKey>(): Promise<EntitySchema<T>[]> {
+    try {
+      const response = await this.collection.get();
+
+      const data = response.docs.map((item) => ({
+        ...item.data(),
+        id: item.ref.id,
+      }));
+
+      return data as EntitySchema<T>[];
+    } catch (e) {
+      throw new FireStoreBaseError(e as any);
+    }
+  }
+
   private async save<T extends EntitiesKey>(
-    payload: EntitySchema<EntitiesKey>,
+    payload: CreateEntity<EntitiesKey>,
   ) {
     try {
       await this.collection.add(payload);

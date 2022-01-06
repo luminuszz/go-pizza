@@ -1,11 +1,11 @@
 import React from 'react';
 
+import { ForgotPasswordScreen } from '@components/pages/auth/ForgotPassword/forgotPassword.screen';
+import { LoginScreen } from '@components/pages/auth/SignIn';
 import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
-import { ForgotPasswordScreen } from '@screens/auth/ForgotPassword';
-import { LoginScreen } from '@screens/auth/SignIn';
 
 import { PublicRouteStackParamsList } from '@core/config/routes/types.routes';
 

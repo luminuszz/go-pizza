@@ -75,7 +75,7 @@ function CreateProductScreen() {
   const description = watch('description');
 
   function handleCreateProduct(formValues: CreateProductPayload) {
-    const payload: Product = {
+    const payload = {
       ...formValues,
       imageUrl: image?.uri || null,
       gPrice: toCents(formValues.gPrice),

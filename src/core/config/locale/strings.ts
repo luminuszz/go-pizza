@@ -53,6 +53,15 @@ const strings = {
         error: 'Houve um erro na criação do produto',
       },
     },
+
+    signIn: {
+      forgotPassswordTitle: 'Esqueci minha senha',
+      title: 'Login',
+    },
+    forgotPasssword: {
+      title: 'Esqueci minha senha',
+      backToLoginMessage: 'Voltar para o login',
+    },
   },
   validationsMessages,
 };

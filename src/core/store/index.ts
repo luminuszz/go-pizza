@@ -1,4 +1,5 @@
-import themeReducer from '@features/theme.slice';
+import authReducer from '@features/auth/auth.slice';
+import themeReducer from '@features/theme/theme.slice';
 import { configureStore, Middleware } from '@reduxjs/toolkit';
 import createDebugger from 'redux-flipper';
 import { persistStore } from 'redux-persist';
@@ -15,7 +16,6 @@ import { Collections } from '@core/services/localStorage';
 import { withPersist } from '@core/store/middlewares/withPersist';
 
 import productReducer from '../../features/product/product.slice';
-import sessionReducer from '../../features/session/session.slice';
 
 const customMiddlewares: Middleware[] = [];
 if (__DEV__) {
@@ -25,7 +25,7 @@ if (__DEV__) {
 const Store = configureStore({
   reducer: {
     theme: withPersist(Collections.theme, themeReducer),
-    session: withPersist(Collections.users, sessionReducer),
+    auth: withPersist(Collections.users, authReducer),
     product: productReducer,
   },
   middleware: (getDefaultMiddleware) => [

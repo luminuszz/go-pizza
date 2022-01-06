@@ -19,6 +19,4 @@ export type FirestoreUser = {
   email: string;
 };
 
-export interface FirestoreProduct extends Product {
-  photoPath: string | null;
-}
+export interface FirestoreProduct extends Product {}

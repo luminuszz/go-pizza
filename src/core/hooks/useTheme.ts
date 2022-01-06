@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { getCurrentTheme, toggleTheme } from '@features/theme.slice';
+import { getCurrentTheme, toggleTheme } from '@features/theme/theme.slice';
 import themes from '@styles/themes';
 
 import { useAppDispatch, useAppSelector } from '@core/hooks/useRedux';

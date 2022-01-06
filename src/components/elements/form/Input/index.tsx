@@ -32,10 +32,6 @@ function Input({
     name,
   });
 
-  console.log({
-    error,
-  });
-
   return control ? (
     <>
       <Container

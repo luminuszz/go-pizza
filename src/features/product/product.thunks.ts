@@ -1,12 +1,15 @@
+import { addManyProducts } from '@features/product/product.slice';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { firebaseFireStorage } from '@core/services/firebase/firestorage';
 import { firebaseFirestore } from '@core/services/firebase/firestore';
-import { Product } from '@core/types/product.types';
+import { CreateProductPayload, Product } from '@core/types/product.types';
 
-export const createProduct = createAsyncThunk<any, Product>(
+export const createProduct = createAsyncThunk<any, CreateProductPayload>(
   'createProduct',
-  async (product) => {
+  async (payload) => {
+    const product: Omit<Product, 'id'> = { ...payload, photoPath: null };
+
     if (product.imageUrl) {
       const fileName = new Date().getTime().toString();
 
@@ -15,16 +18,17 @@ export const createProduct = createAsyncThunk<any, Product>(
         .save(`${fileName}.png`, product.imageUrl);
 
       product.imageUrl = await imageRef.getDownloadURL();
-      await firebaseFirestore.getRepository('PRODUCT').save({
-        ...product,
-        photoPath: imageRef.fullPath,
-      });
-
-      return;
+      product.photoPath = imageRef.fullPath;
     }
-    await firebaseFirestore.getRepository('PRODUCT').save({
-      ...product,
-      photoPath: null,
-    });
+    await firebaseFirestore.getRepository('PRODUCT').save(product);
+  },
+);
+
+export const fetchAllProducts = createAsyncThunk(
+  'fetchAllProducts',
+  async (_, { dispatch }) => {
+    const response = await firebaseFirestore.getRepository('PRODUCT').getAll();
+
+    dispatch(addManyProducts(response));
   },
 );

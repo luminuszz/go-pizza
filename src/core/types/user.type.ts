@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
-import { isString, isBoolean } from '@core/helpers/validationTypes';
+import { IsString, IsBoolean } from '@core/helpers/validationTypes';
 
 export const UserEntity = z.object({
-  name: isString,
-  email: isString,
-  id: isString,
-  isAdmin: isBoolean,
+  name: IsString,
+  email: IsString,
+  id: IsString,
+  isAdmin: IsBoolean,
 });
 
 export type User = z.infer<typeof UserEntity>;
 
 export const userLoginPayloadSchema = UserEntity.pick({ email: true }).extend({
-  password: isString,
+  password: IsString,
 });
 
 export type UserLoginPayload = z.infer<typeof userLoginPayloadSchema>;
